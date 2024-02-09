@@ -88,6 +88,11 @@ app.get('/posts', (req, res) => {
 });
 
 
+
+
+
+
+
 // Rota para processar o formulário de login
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -111,7 +116,7 @@ app.post('/login', (req, res) => {
 // Rota para processar o formulário de caastro depostagem
 app.post('/cadastrar_posts', (req, res) => {
     const { titulo, conteudo, } = req.body;
-    const autor = "admin";
+    const autor = req.session.username;
     const datadepostagem = new Date();
 
     // const query = 'SELECT * FROM users WHERE username = ? AND password = SHA1(?)';
@@ -151,10 +156,40 @@ app.post('/cadastrar_posts', (req, res) => {
 // Rota para a página cadastro do post
 app.get('/cadastrar_posts', (req, res) => {
     // Quando for renderizar páginas pelo EJS, passe parametros para ele em forma de JSON
-    if (req.session.loggedin){
-        res.render('pages/cadastrar_posts', {req: req });
+    if (req.session.loggedin) {
+        res.render('pages/cadastrar_posts', { req: req });
     } else {
         res.redirect('/login_failed');
+    }
+});
+
+
+app.get('/postsdelete/:id', (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+    if (req.session.loggedin) {
+        const query = `DELETE FROM posts WHERE id = ${id}`;
+        console.log(query);
+        db.query(query, [], (err, results) => {
+            if (err) throw err;
+            //res.render('pages/pgpostsdelete', { req: req, postsdlt: results });
+            res.redirect('/pgpostsdelete');
+            // if (results.length > 0) {
+            //     req.session.loggedin = true;
+            //     req.session.username = username;
+            //     res.redirect('/dashboard');
+            // } else {
+            //     // res.send('Credenciais incorretas. <a href="/">Tente novamente</a>');
+            //     res.redirect('/login_failed');
+            // }
+        });
+
+        // Se estiver autenticado, renderiza a página pgpostsdelete
+        //res.render('pages/pgpostsdelete', { req: req });
+    } else {
+        // Se não estiver autenticado, redireciona para a página de login
+        res.redirect('/login_failed');
+       
     }
 });
 

@@ -3,13 +3,14 @@
     <h1><i>Lista de Posts</h1></i></h1>
   </div>
 
-  <% posts. forEach(post => { %>
+  <% postsdlt. forEach(post => { %>
   <div class="card-mb-3">
     <div class="card-body">
       <h3 class="card-title"><%= post.titulo %></h3>  
       <p class="card-text"><%- post.conteudo %></p>
       <h5 class="card-data"><%= post.datadepostagem %></h5>
       <h5 class="card-autor"><%= post.autor %></h5>
+      <a href="/postsdelete/<%= post.id %>" class="card-delete"
     </div>
   </div>
   <%  }); %>
@@ -43,6 +44,6 @@
   }
 
   .card-body:hover {
-    box-shadow: #40e0d0 0.1em 0.1em 0.5em;
+    box-shadow: red 0.1em 0.1em 0.5em;
   }
 </style>
